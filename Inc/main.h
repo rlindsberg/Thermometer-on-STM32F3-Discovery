@@ -95,8 +95,6 @@
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
-#define LED2_Pin GPIO_PIN_15
-#define LED2_GPIO_Port GPIOA
 #define LED3_Pin GPIO_PIN_11
 #define LED3_GPIO_Port GPIOC
 #define LED4_Pin GPIO_PIN_0
