@@ -42,6 +42,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "stdbool.h"
 
 ITStatus UartReady = RESET;
 /* Size of Transmission buffer */
@@ -94,6 +95,29 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
 }
 
 /**
+* @brief  Checks if it is a short pulse or a long one.
+* @param
+* @note   None
+* @retval None
+**/
+int interpretPulse(uint16_t ticks){
+  if (500 < ticks && ticks < 700) { //short puls, 1.
+    /* code */
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
+    return 1;
+  } else if (1400 < ticks && ticks < 1600) { //long puls, 0
+    /* code */
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+    return 0;
+  } //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
+  return 3000; //error code 3000.
+}
+
+uint32_t savePulse(int dataBit, uint32_t myVariable){
+  return myVariable = (myVariable | dataBit) << 1;
+}
+
+/**
 * @brief  Rising/falling edge captured callback
 * @param  TIM_HandleTypeDef: htim2
 * @note   A simple way to report capture of an edge
@@ -101,15 +125,28 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
 **/
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
   static uint16_t ticks1, ticks2;
+  static uint32_t preamble = 0;
+  static uint32_t temperaturData = 0;
+
   if (htim2->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
     //Gets input capture value upon negative edge
     ticks2 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_2);
     //Gets input capture value upon positive edge
     ticks1 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_1);
 
-    //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
+    //Checks preamble
+    for (int i = 0; i < 9; i++) {
+      if (interpretPulse(ticks2) == 1) {
+        preamble = savePulse(1, preamble);
+      } else {
+        preamble = 0; //reset
+        return;
+      }
+    }
 
-
+    if (preamble == 0x1FF) { //preamble is valid, 1 1111 1111
+      /* code */
+    }
 
   }
 
@@ -188,7 +225,7 @@ int main(void)
 
   }
 
-/* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /** System Clock Configuration
