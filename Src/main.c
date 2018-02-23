@@ -101,20 +101,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
 * @retval None
 **/
 int interpretPulse(uint16_t ticks){
-  if (500 < ticks && ticks < 700) { //short puls, 1.
+  if (332 < ticks && ticks < 532) { //short puls, 1. 383µs +-50µs
     /* code */
     HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
     return 1;
-  } else if (1400 < ticks && ticks < 1600) { //long puls, 0
+  } else if (1314 < ticks && ticks < 1600) { //long puls, 0. 1364µs +- 50µs
     /* code */
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+    // HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+    // HAL_Delay(100);
     return 0;
   } //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
   return 3000; //error code 3000.
 }
 
 uint32_t savePulse(int dataBit, uint32_t myVariable){
-  return myVariable = (myVariable | dataBit) << 1;
+  return myVariable = (myVariable << 1) | dataBit;
 }
 
 /**
@@ -127,6 +128,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
   static uint16_t ticks1, ticks2;
   static uint32_t preamble = 0;
   static uint32_t temperaturData = 0;
+  static int bitCounter = 0;
+  static int clearForTemp = 0;
 
   if (htim2->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
     //Gets input capture value upon negative edge
@@ -134,18 +137,42 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
     //Gets input capture value upon positive edge
     ticks1 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_1);
 
-    //Checks preamble
-    for (int i = 0; i < 9; i++) {
+
+    if (preamble == 0x01FF) { //preamble is valid, 1 1111 1111
+      //Now receives data from the censor
+      // temperaturData = savePulse(0, temperaturData);
+      // temperaturData = savePulse(1, temperaturData); //Just to verify that the program DOES write data..
+      if (bitCounter < 8) {
+        temperaturData = savePulse(interpretPulse(ticks2), temperaturData); //Saves data to temperaturData
+        bitCounter ++;
+      }
+
+      //When 8 bits saved to temperaturData
+      if (bitCounter == 8) {
+        if (temperaturData == 0x48) { //0100 1000
+          //preamble complete, first 8 bits of temperaturData correct, cotinues..
+          HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+          HAL_Delay(100);
+
+
+        } else { //not correct, reset
+          temperaturData = 0;
+          bitCounter = 0;
+          preamble = 0;
+          return;
+        }
+      }
+
+    } else { //preamble not complete
+      //Checks preamble
       if (interpretPulse(ticks2) == 1) {
-        preamble = savePulse(1, preamble);
+        int dataBit = 1;
+        preamble = savePulse(dataBit, preamble);
       } else {
         preamble = 0; //reset
         return;
       }
-    }
 
-    if (preamble == 0x1FF) { //preamble is valid, 1 1111 1111
-      /* code */
     }
 
   }
@@ -254,7 +281,7 @@ void SystemClock_Config(void)
   /**Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-  |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
