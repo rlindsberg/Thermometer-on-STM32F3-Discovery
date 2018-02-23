@@ -128,8 +128,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
   static uint16_t ticks1, ticks2;
   static uint32_t preamble = 0;
   static uint32_t temperaturData = 0;
+  static uint32_t receivedCRC = 0;
+  static uint32_t calculatedCRC = 0;
   static int bitCounter = 0;
   static int clearForTemp = 0;
+  static int clearForCRC = 0;
 
   if (htim2->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
     //Gets input capture value upon negative edge
@@ -150,15 +153,16 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
       //When 8 bits saved to temperaturData
       if (bitCounter == 8) {
         if (temperaturData == 0x48) { //0100 1000
-          //preamble complete, first 8 bits of temperaturData correct, cotinues..
+          //preamble complete, first 8 bits of temperaturData correct
+          //All clear to fill temperatureData with more bits
           HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-          HAL_Delay(100);
-
-
-        } else { //not correct, reset
+          clearForTemp = 1;
+        } else if (clearForTemp == 0){ //not ready to move on, first 8 bits of data are not correct, reset
           temperaturData = 0;
           bitCounter = 0;
           preamble = 0;
+          clearForTemp = 0;
+          clearForCRC = 0;
           return;
         }
       }
@@ -173,6 +177,24 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
         return;
       }
 
+    }
+
+    //preamble complete, first 8 bits of temperaturData correct, cotinues..
+    if (clearForTemp == 1 && bitCounter < 32) {
+      temperaturData = savePulse(interpretPulse(ticks2), temperaturData);
+      bitCounter ++;
+    } else if (clearForTemp == 1 && bitCounter == 32) {
+      clearForCRC = 1;
+    }
+
+    //temperaturData completed, begins to receive CRC
+    if (clearForCRC == 1 && bitCounter < 40) {
+      receivedCRC = savePulse(interpretPulse(ticks2), receivedCRC);
+    }
+
+    if (receivedCRC == 0x5D) {
+      /* code */
+      HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_14);
     }
 
   }
@@ -281,7 +303,7 @@ void SystemClock_Config(void)
   /**Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-    |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
