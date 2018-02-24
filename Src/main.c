@@ -101,11 +101,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
 * @retval None
 **/
 int interpretPulse(uint16_t ticks){
-  if (332 < ticks && ticks < 532) { //short puls, 1. 383µs +-50µs
+  if (283 < ticks && ticks < 483) { //short puls, 1. 383µs +-50µs
     /* code */
     HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
     return 1;
-  } else if (1314 < ticks && ticks < 1600) { //long puls, 0. 1364µs +- 50µs
+  } else if (1264 < ticks && ticks < 1464) { //long puls, 0. 1364µs +- 50µs
     /* code */
     // HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
     // HAL_Delay(100);
@@ -141,7 +141,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
     ticks1 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_1);
 
 
-    if (preamble == 0x01FF) { //preamble is valid, 1 1111 1111
+    if (preamble == 0xFF) { //preamble is valid, 1111 1111
       //Now receives data from the censor
       // temperaturData = savePulse(0, temperaturData);
       // temperaturData = savePulse(1, temperaturData); //Just to verify that the program DOES write data..
@@ -191,6 +191,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
     //temperaturData completed, begins to receive CRC
     if (clearForCRC == 1 && bitCounter < 40) {
       receivedCRC = savePulse(interpretPulse(ticks2), receivedCRC);
+      bitCounter ++;
     }
     calculatedCRC = HAL_CRC_Calculate(&hcrc, &temperaturData, 1);
     if (receivedCRC == calculatedCRC) {
