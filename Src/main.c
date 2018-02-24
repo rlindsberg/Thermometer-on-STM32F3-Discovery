@@ -152,11 +152,12 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
 
       //When 8 bits saved to temperaturData
       if (bitCounter == 8) {
-        if (temperaturData == 0x48) { //0100 1000
+        if (temperaturData == 0x48 && clearForTemp == 0) { //0100 1000
           //preamble complete, first 8 bits of temperaturData correct
           //All clear to fill temperatureData with more bits
           HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
           clearForTemp = 1;
+          return;
         } else if (clearForTemp == 0){ //not ready to move on, first 8 bits of data are not correct, reset
           temperaturData = 0;
           bitCounter = 0;
