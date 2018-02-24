@@ -192,7 +192,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
     if (clearForCRC == 1 && bitCounter < 40) {
       receivedCRC = savePulse(interpretPulse(ticks2), receivedCRC);
     }
-    calculatedCRC = HAL_CRC_Calculate(&hcrc, &temperaturData, 32);
+    calculatedCRC = HAL_CRC_Calculate(&hcrc, &temperaturData, 1);
     if (receivedCRC == calculatedCRC) {
       /* code */
       HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_14);
