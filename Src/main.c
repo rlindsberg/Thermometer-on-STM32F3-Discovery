@@ -75,7 +75,7 @@ void SystemClock_Config(void);
 
 /**
 * @brief  Init display
-* @param  ..
+* @param  uint8_t commandToBeSent[]
 * @note   ..
 * @retval None
 **/
@@ -87,7 +87,7 @@ void sendCommandToSPI(uint8_t commandToBeSent[]){
 
 /**
 * @brief  Init display
-* @param  ..
+* @param  None
 * @note   ..
 * @retval None
 **/
@@ -120,19 +120,33 @@ void initDisplay(void){
   sendCommandToSPI(functionSet3);
   uint8_t displayOn[3] = {0x1f,0x0f,0x00};
   sendCommandToSPI(displayOn);
-  uint8_t clearDisplay[3] = {0x1f,0x0,0x01};
+  uint8_t clearDisplay[3] = {0x1f,0x01,0x0};
   sendCommandToSPI(clearDisplay);
-  uint8_t sendone[3] = {0x1f,0x1,0x00};
-  sendCommandToSPI(sendone);
 
 }
 
+/**
+* @brief  Put cursor onto the desired row
+* @param  uint8_t rowNr
+* @note   ..
+* @retval None
+**/
 void selectRow(uint8_t rowNr){
   uint8_t rowAddress = 0x80 + rowNr * 0x20;
   printf("%x\n", rowAddress);
-  HAL_SPI_Transmit(&hspi2, &rowAddress, 1, 500);
+  uint8_t displayBuffer[3];
+  displayBuffer[0] = 0x1f;
+  displayBuffer[1] = rowAddress & 0x0f;
+  displayBuffer[2] = (rowAddress >> 4) & 0x0f;
+  HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 1000);
 }
 
+/**
+* @brief  Sends an ASCII code to display
+* @param  uint8_t asciiData
+* @note   ..
+* @retval None
+**/
 void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
   uint8_t displayBuffer[3];
   displayBuffer[0] = 0x5f;
@@ -142,6 +156,12 @@ void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
   // sendCommandToSPI(displayBuffer); //doesn't work..
 }
 
+/**
+* @brief  Sends a string to display
+* @param  char charBuffer[]
+* @note   ..
+* @retval None
+**/
 void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
   uint8_t displayBuffer[3];
   displayBuffer[0] = 0x5f;
@@ -150,15 +170,6 @@ void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
     displayBuffer[2] = charBuffer[i] >> 4 & 0x0f;
     HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
   }
-}
-
-
-void displaySend(uint8_t data) {  // Send one character to display
-  uint8_t displaySend[3];
-  displaySend[0] = 0x5f;
-  displaySend[1] = data & 0x0f;
-  displaySend[2] = (data >> 4) & 0x0f;
-  HAL_SPI_Transmit(&hspi2,displaySend,3,1000);
 }
 
 
@@ -205,6 +216,12 @@ int interpretPulse(uint16_t ticks){
   return 3000; //error code 3000.
 }
 
+/**
+* @brief  Saves pulse to a variable
+* @param  int dataBit, uint32_t myVariable
+* @note   ...
+* @retval None
+**/
 uint32_t savePulse(int dataBit, uint32_t myVariable){
   return myVariable = (myVariable << 1) | dataBit;
 }
@@ -294,13 +311,15 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
         printf("The current temperature is %0.1f Celsius, \n", tempToPrint);
         int humToPrint = (temperaturData & 0x7F); //0....0111 1111
         printf("the humidity is %d%%.\n", humToPrint);
-
-        char buffer[100];
+        //Creates a buffer for line 1 on the display
+        char buffer[10];
         sprintf(buffer, "Temp:%0.1fC", tempToPrint);
         sendCharToDisplay(buffer);
-        selectRow(2);
-        // sprintf(buffer, "Hum:%d%%", humToPrint);
-        sendCharToDisplay(buffer);
+        selectRow(3);
+        char buffer2[10]; //buffer2 for line 2
+        // sprintf(buffer2, "Temp:%0.1fC", tempToPrint);
+        sprintf(buffer2, "Hum:   %d%%", humToPrint);
+        sendCharToDisplay(buffer2);
 
         temperaturData = 0;
         bitCounter = 0;
@@ -352,7 +371,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   initDisplay();
-  selectRow(1);
+  selectRow(0);
   // sprintf
 
   //Start TIM2
