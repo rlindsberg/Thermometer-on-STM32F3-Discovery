@@ -49,7 +49,7 @@
 //These declaration are put here to avoid being flushed when generating new code with CubeMX
 ITStatus UartReady = RESET;
 /* Size of Transmission buffer */
-#define BUFFERSIZE 5
+#define BUFFERSIZE 1
 uint8_t Buffer[] = "Hello World interrupt!";
 uint8_t RXBuffer[] = "";
 /* USER CODE END Includes */
@@ -314,13 +314,16 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
         //Creates a buffer for line 1 on the display
         char buffer[10];
         sprintf(buffer, "Temp:%0.1fC", tempToPrint);
+        selectRow(1);
         sendCharToDisplay(buffer);
-        selectRow(3);
+        selectRow(2);
         char buffer2[10]; //buffer2 for line 2
         // sprintf(buffer2, "Temp:%0.1fC", tempToPrint);
         sprintf(buffer2, "Hum:   %d%%", humToPrint);
         sendCharToDisplay(buffer2);
 
+        buffer[0]='\0';
+        buffer2[0]='\0';
         temperaturData = 0;
         bitCounter = 0;
         preamble = 0;
