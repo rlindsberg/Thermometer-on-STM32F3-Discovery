@@ -75,7 +75,7 @@ void SystemClock_Config(void);
 
 /**
 * @brief  Init display
-* @param  ..
+* @param  uint8_t commandToBeSent[]
 * @note   ..
 * @retval None
 **/
@@ -87,7 +87,7 @@ void sendCommandToSPI(uint8_t commandToBeSent[]){
 
 /**
 * @brief  Init display
-* @param  ..
+* @param  None
 * @note   ..
 * @retval None
 **/
@@ -120,10 +120,8 @@ void initDisplay(void){
   sendCommandToSPI(functionSet3);
   uint8_t displayOn[3] = {0x1f,0x0f,0x00};
   sendCommandToSPI(displayOn);
-  uint8_t clearDisplay[3] = {0x1f,0x0,0x01};
+  uint8_t clearDisplay[3] = {0x1f,0x01,0x0};
   sendCommandToSPI(clearDisplay);
-  uint8_t sendone[3] = {0x1f,0x1,0x00};
-  sendCommandToSPI(sendone);
 
 }
 
@@ -154,15 +152,6 @@ void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
     displayBuffer[2] = charBuffer[i] >> 4 & 0x0f;
     HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
   }
-}
-
-
-void displaySend(uint8_t data) {  // Send one character to display
-  uint8_t displaySend[3];
-  displaySend[0] = 0x5f;
-  displaySend[1] = data & 0x0f;
-  displaySend[2] = (data >> 4) & 0x0f;
-  HAL_SPI_Transmit(&hspi2,displaySend,3,1000);
 }
 
 
