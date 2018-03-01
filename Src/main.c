@@ -125,6 +125,12 @@ void initDisplay(void){
 
 }
 
+/**
+* @brief  Put cursor onto the desired row
+* @param  uint8_t rowNr
+* @note   ..
+* @retval None
+**/
 void selectRow(uint8_t rowNr){
   uint8_t rowAddress = 0x80 + rowNr * 0x20;
   printf("%x\n", rowAddress);
@@ -135,6 +141,12 @@ void selectRow(uint8_t rowNr){
   HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 1000);
 }
 
+/**
+* @brief  Sends an ASCII code to display
+* @param  uint8_t asciiData
+* @note   ..
+* @retval None
+**/
 void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
   uint8_t displayBuffer[3];
   displayBuffer[0] = 0x5f;
@@ -144,6 +156,12 @@ void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
   // sendCommandToSPI(displayBuffer); //doesn't work..
 }
 
+/**
+* @brief  Sends a string to display
+* @param  char charBuffer[]
+* @note   ..
+* @retval None
+**/
 void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
   uint8_t displayBuffer[3];
   displayBuffer[0] = 0x5f;
@@ -198,6 +216,12 @@ int interpretPulse(uint16_t ticks){
   return 3000; //error code 3000.
 }
 
+/**
+* @brief  Saves pulse to a variable
+* @param  int dataBit, uint32_t myVariable
+* @note   ...
+* @retval None
+**/
 uint32_t savePulse(int dataBit, uint32_t myVariable){
   return myVariable = (myVariable << 1) | dataBit;
 }
