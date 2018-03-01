@@ -2,6 +2,7 @@
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\crc.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\gpio.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\main.pbi
+C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\spi.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_cortex.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_crc.pbi
@@ -17,6 +18,8 @@ C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32m
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_pwr_ex.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_rcc.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_rcc_ex.pbi
+C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_spi.pbi
+C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_spi_ex.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_tim.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_tim_ex.pbi
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\lab2-cube32mx\Obj\stm32f3xx_hal_uart.pbi

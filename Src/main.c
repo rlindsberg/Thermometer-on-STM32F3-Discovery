@@ -1,45 +1,46 @@
 /**
-******************************************************************************
-* File Name          : main.c
-* Description        : Main program body
-******************************************************************************
-** This notice applies to any and all portions of this file
-* that are not between comment pairs USER CODE BEGIN and
-* USER CODE END. Other portions of this file, whether
-* inserted by the user or by software development tools
-* are owned by their respective copyright owners.
-*
-* COPYRIGHT(c) 2018 STMicroelectronics
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*   1. Redistributions of source code must retain the above copyright notice,
-*      this list of conditions and the following disclaimer.
-*   2. Redistributions in binary form must reproduce the above copyright notice,
-*      this list of conditions and the following disclaimer in the documentation
-*      and/or other materials provided with the distribution.
-*   3. Neither the name of STMicroelectronics nor the names of its contributors
-*      may be used to endorse or promote products derived from this software
-*      without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * File Name          : main.c
+  * Description        : Main program body
+  ******************************************************************************
+  ** This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
+  *
+  * COPYRIGHT(c) 2018 STMicroelectronics
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *   1. Redistributions of source code must retain the above copyright notice,
+  *      this list of conditions and the following disclaimer.
+  *   2. Redistributions in binary form must reproduce the above copyright notice,
+  *      this list of conditions and the following disclaimer in the documentation
+  *      and/or other materials provided with the distribution.
+  *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  *      may be used to endorse or promote products derived from this software
+  *      without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
+  ******************************************************************************
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f3xx_hal.h"
 #include "crc.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -69,6 +70,97 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+
+
+
+/**
+* @brief  Init display
+* @param  ..
+* @note   ..
+* @retval None
+**/
+void sendCommandToSPI(uint8_t commandToBeSent[]){
+  for (int i = 0; i < 3; i++) {
+    HAL_SPI_Transmit(&hspi2, &commandToBeSent[i], 1, 50);
+  }
+}
+
+/**
+* @brief  Init display
+* @param  ..
+* @note   ..
+* @retval None
+**/
+void initDisplay(void){
+  //Set CS to 0, Reset SPI2_NSS
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
+  HAL_Delay(10);
+  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+  // HAL_Delay(10);
+  //Initialization commands
+  uint8_t functionSet[3] = {0x1f, 0x0a, 0x03};
+  sendCommandToSPI(functionSet);
+  uint8_t extendedFunctionSet[3] = {0x1f, 0x09, 0x0};
+  sendCommandToSPI(extendedFunctionSet);
+  uint8_t entryModeSet[3] = {0x1f, 0x06, 0x0};
+  sendCommandToSPI(entryModeSet);
+  uint8_t biasSetting[3] = {0x1f,0x0e,0x01};
+  sendCommandToSPI(biasSetting);
+  uint8_t functionSet2[3] = {0x1f,0x09,0x03};
+  sendCommandToSPI(functionSet2);
+  uint8_t internalOSC[3] = {0x1f,0x0b,0x01};
+  sendCommandToSPI(internalOSC);
+  uint8_t followerControl[3] = {0x1f,0x0e,0x06};
+  sendCommandToSPI(followerControl);
+  uint8_t powerControl[3] = {0x1f,0x06,0x05};
+  sendCommandToSPI(powerControl);
+  uint8_t contrastSet[3] = {0x1f,0x0a,0x07};
+  sendCommandToSPI(contrastSet);
+  uint8_t functionSet3[3] = {0x1f,0x08,0x03};
+  sendCommandToSPI(functionSet3);
+  uint8_t displayOn[3] = {0x1f,0x0f,0x00};
+  sendCommandToSPI(displayOn);
+  uint8_t clearDisplay[3] = {0x1f,0x0,0x01};
+  sendCommandToSPI(clearDisplay);
+  uint8_t sendone[3] = {0x1f,0x1,0x00};
+  sendCommandToSPI(sendone);
+
+}
+
+void selectRow(uint8_t rowNr){
+  uint8_t rowAddress = 0x80 + rowNr * 0x20;
+  printf("%x\n", rowAddress);
+  HAL_SPI_Transmit(&hspi2, &rowAddress, 1, 500);
+}
+
+void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
+  uint8_t displayBuffer[3];
+  displayBuffer[0] = 0x5f;
+  displayBuffer[1] = asciiData & 0x0f;
+  displayBuffer[2] = (asciiData >> 4) & 0x0f;
+  HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
+  // sendCommandToSPI(displayBuffer); //doesn't work..
+}
+
+void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
+  uint8_t displayBuffer[3];
+  displayBuffer[0] = 0x5f;
+  for (size_t i = 0; i < 10; i++) {
+    displayBuffer[1] = charBuffer[i] & 0x0f;
+    displayBuffer[2] = charBuffer[i] >> 4 & 0x0f;
+    HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
+  }
+}
+
+
+void displaySend(uint8_t data) {  // Send one character to display
+  uint8_t displaySend[3];
+  displaySend[0] = 0x5f;
+  displaySend[1] = data & 0x0f;
+  displaySend[2] = (data >> 4) & 0x0f;
+  HAL_SPI_Transmit(&hspi2,displaySend,3,1000);
+}
+
 
 /**
 * @brief  Tx Transfer completed callback
@@ -127,8 +219,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
   static uint16_t ticks1, ticks2;
   static uint32_t preamble = 0;
   static uint32_t temperaturData = 0;
-  static uint32_t receivedCRC = 0;
-  static uint32_t calculatedCRC = 0xF;
+  static uint32_t receivedCRC = NULL;
+  static uint32_t calculatedCRC = NULL;
   static int bitCounter = 0;
   static int clearForTemp = 0;
   static int clearForCRC = 0;
@@ -192,27 +284,39 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
       bitCounter ++;
       // printf("bitCounter is %i\n", bitCounter);
     }
-    if (bitCounter == 40) {
+    if (bitCounter == 40) { //Reception complete, calculates and verifies CRC
       calculatedCRC = HAL_CRC_Calculate(&hcrc, &temperaturData, 1);
-    }
 
-    //Received data is correct, prints temp to terminal.
-    if (receivedCRC == calculatedCRC) {
-      HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13); //data correct
+      //Received data is correct, prints temp to terminal.
+      if (receivedCRC == calculatedCRC) {
+        HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13); //data correct
+        double tempToPrint = (double)((temperaturData >> 8) & 0x3FF) / 10; //00 0000 0000 0000 11 1111 1111
+        printf("The current temperature is %0.1f Celsius, \n", tempToPrint);
+        int humToPrint = (temperaturData & 0x7F); //0....0111 1111
+        printf("the humidity is %d%%.\n", humToPrint);
 
+        char buffer[100];
+        sprintf(buffer, "Temp:%0.1fC", tempToPrint);
+        sendCharToDisplay(buffer);
+        selectRow(2);
+        // sprintf(buffer, "Hum:%d%%", humToPrint);
+        sendCharToDisplay(buffer);
 
+        temperaturData = 0;
+        bitCounter = 0;
+        preamble = 0;
+        clearForTemp = 0;
+        clearForCRC = 0;
+        calculatedCRC = 0;
+        receivedCRC = 0;
+        return;
 
-      double tempToPrint = (double)((temperaturData >> 8) & 0x3FF) / 10; //00 0000 0000 0000 11 1111 1111
-      printf("The current temperature is %0.1f Celsius, \n", tempToPrint);
-      int humToPrint = (temperaturData & 0x7F); //0....0111 1111
-      printf("the humidity is %d%%\n", humToPrint);
-      HAL_Delay(100);
-
+      }
     }
 
   }
 
-}
+}//callback ends
 
 /* USER CODE END 0 */
 
@@ -244,8 +348,12 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   MX_CRC_Init();
+  MX_SPI2_Init();
 
   /* USER CODE BEGIN 2 */
+  initDisplay();
+  selectRow(1);
+  // sprintf
 
   //Start TIM2
   if (HAL_TIM_IC_Start_IT(&htim2,TIM_CHANNEL_2) != HAL_OK) {
@@ -257,9 +365,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+  /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+  /* USER CODE BEGIN 3 */
 
     /* Put UART peripheral in reception process */
     if(HAL_UART_Receive_IT(&huart3, (uint8_t *)RXBuffer, BUFFERSIZE) != HAL_OK)
@@ -301,8 +409,8 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-  /**Initializes the CPU, AHB and APB busses clocks
-  */
+    /**Initializes the CPU, AHB and APB busses clocks
+    */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
@@ -315,10 +423,10 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  /**Initializes the CPU, AHB and APB busses clocks
-  */
+    /**Initializes the CPU, AHB and APB busses clocks
+    */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-  |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -336,12 +444,12 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  /**Configure the Systick interrupt time
-  */
+    /**Configure the Systick interrupt time
+    */
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
-  /**Configure the Systick
-  */
+    /**Configure the Systick
+    */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
@@ -353,10 +461,10 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-* @brief  This function is executed in case of error occurrence.
-* @param  None
-* @retval None
-*/
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
+  */
 void _Error_Handler(char * file, int line)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -370,12 +478,12 @@ void _Error_Handler(char * file, int line)
 #ifdef USE_FULL_ASSERT
 
 /**
-* @brief Reports the name of the source file and the source line number
-* where the assert_param error has occurred.
-* @param file: pointer to the source file name
-* @param line: assert_param error line source number
-* @retval None
-*/
+   * @brief Reports the name of the source file and the source line number
+   * where the assert_param error has occurred.
+   * @param file: pointer to the source file name
+   * @param line: assert_param error line source number
+   * @retval None
+   */
 void assert_failed(uint8_t* file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
@@ -388,11 +496,11 @@ void assert_failed(uint8_t* file, uint32_t line)
 #endif
 
 /**
-* @}
-*/
+  * @}
+  */
 
 /**
-* @}
+  * @}
 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

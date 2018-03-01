@@ -350,7 +350,7 @@
                     <state>$PROJ_DIR$/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../Drivers/CMSIS/Device/ST/STM32F3xx/Include</state>
                     <state>$PROJ_DIR$/../Drivers/CMSIS/Include</state>
-                <state /><state /><state /><state /><state /></option>
+                <state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /><state /></option>
                 <option>
                     <name>CCStdIncCheck</name>
                     <state>0</state>
@@ -1054,6 +1054,8 @@
             </file>
         <file>
                 <name>$PROJ_DIR$/../Src/crc.c</name>
+            </file><file>
+                <name>$PROJ_DIR$/../Src/spi.c</name>
             </file></group>
     </group>
     <group>
@@ -1118,6 +1120,10 @@
                 <name>$PROJ_DIR$/../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_crc.c</name>
             </file><file>
                 <name>$PROJ_DIR$/../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_crc_ex.c</name>
+            </file><file>
+                <name>$PROJ_DIR$/../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_spi.c</name>
+            </file><file>
+                <name>$PROJ_DIR$/../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_spi_ex.c</name>
             </file></group>
     </group>
 </project>
