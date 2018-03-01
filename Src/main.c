@@ -130,7 +130,11 @@ void initDisplay(void){
 void selectRow(uint8_t rowNr){
   uint8_t rowAddress = 0x80 + rowNr * 0x20;
   printf("%x\n", rowAddress);
-  HAL_SPI_Transmit(&hspi2, &rowAddress, 1, 500);
+  uint8_t displayBuffer[3];
+  displayBuffer[0] = 0x1f;
+  displayBuffer[1] = rowAddress & 0x0f;
+  displayBuffer[2] = (rowAddress >> 4) & 0x0f;
+  HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 1000);
 }
 
 void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
@@ -294,13 +298,15 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
         printf("The current temperature is %0.1f Celsius, \n", tempToPrint);
         int humToPrint = (temperaturData & 0x7F); //0....0111 1111
         printf("the humidity is %d%%.\n", humToPrint);
-
-        char buffer[100];
+        //Creates a buffer for line 1 on the display
+        char buffer[10];
         sprintf(buffer, "Temp:%0.1fC", tempToPrint);
         sendCharToDisplay(buffer);
-        selectRow(2);
-        // sprintf(buffer, "Hum:%d%%", humToPrint);
-        sendCharToDisplay(buffer);
+        selectRow(3);
+        char buffer2[10]; //buffer2 for line 2
+        // sprintf(buffer2, "Temp:%0.1fC", tempToPrint);
+        sprintf(buffer2, "Hum:   %d%%", humToPrint);
+        sendCharToDisplay(buffer2);
 
         temperaturData = 0;
         bitCounter = 0;
@@ -352,7 +358,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   initDisplay();
-  selectRow(1);
+  selectRow(0);
   // sprintf
 
   //Start TIM2
