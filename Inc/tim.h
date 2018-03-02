@@ -64,6 +64,7 @@ void MX_TIM2_Init(void);
 /* USER CODE BEGIN Prototypes */
 int interpretPulse(uint16_t ticks);
 uint32_t savePulse(int dataBit, uint32_t myVariable);
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

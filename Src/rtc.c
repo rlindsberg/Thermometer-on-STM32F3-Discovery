@@ -148,6 +148,12 @@ void RTC_CalendarShow(uint8_t *showtime, uint8_t *showdate)
   sprintf((char *)showtime, "%2d:%2d:%2d", stimestructureget.Hours, stimestructureget.Minutes, stimestructureget.Seconds);
   /* Display date Format : mm-dd-yy */
   sprintf((char *)showdate, "%2d-%2d-%2d", sdatestructureget.Month, sdatestructureget.Date, 2000 + sdatestructureget.Year);
+
+  char buffer[10];
+  sprintf(buffer, "  %2d:%2d:%2d", stimestructureget.Hours, stimestructureget.Minutes, stimestructureget.Seconds);
+  selectRow(0);
+  printf("Showing time..\n");
+  sendCharToDisplay(buffer);
 }
 
 void RTC_CalendarSet(void)
@@ -157,8 +163,8 @@ void RTC_CalendarSet(void)
   sdatestructureget.Date = 2;
   sdatestructureget.Year = 18;
   RTC_TimeTypeDef stimestructureget;
-  stimestructureget.Hours = 01;
-  stimestructureget.Minutes = 01;
+  stimestructureget.Hours = 11;
+  stimestructureget.Minutes = 18;
   stimestructureget.Seconds = 00;
 
   /* Get the RTC current Time */
