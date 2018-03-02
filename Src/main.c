@@ -61,6 +61,10 @@ uint8_t RXBuffer[] = "";
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
+/* Buffers used for displaying Time and Date */
+uint8_t aShowTime[50] = {0};
+uint8_t aShowDate[50] = {0};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -258,6 +262,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   initDisplay();
   selectRow(0);
+  RTC_CalendarSet();
   // sprintf
 
   //Start TIM2
@@ -273,6 +278,8 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+
+    RTC_CalendarShow(aShowTime, aShowDate);
 
     /* Put UART peripheral in reception process */
     if(HAL_UART_Receive_IT(&huart3, (uint8_t *)RXBuffer, BUFFERSIZE) != HAL_OK)
