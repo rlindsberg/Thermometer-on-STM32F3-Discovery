@@ -61,6 +61,8 @@ uint8_t RXBuffer[] = "";
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,122 +108,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
   UartReady = SET;
 }
 
-/**
-* @brief  Rising/falling edge captured callback
-* @param  TIM_HandleTypeDef: htim2
-* @note   A simple way to report capture of an edge
-* @retval None
-**/
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
-  static uint16_t ticks1, ticks2;
-  static uint32_t preamble = 0;
-  static uint32_t temperaturData = 0;
-  static uint32_t receivedCRC = NULL;
-  static uint32_t calculatedCRC = NULL;
-  static int bitCounter = 0;
-  static int clearForTemp = 0;
-  static int clearForCRC = 0;
-
-  if (htim2->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-    //Gets input capture value upon negative edge
-    ticks2 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_2);
-    //Gets input capture value upon positive edge
-    ticks1 = HAL_TIM_ReadCapturedValue(htim2, TIM_CHANNEL_1);
-
-
-    if (preamble == 0xFF) { //preamble is valid, 1111 1111
-      //Now receives data from the censor
-      // temperaturData = savePulse(0, temperaturData);
-      // temperaturData = savePulse(1, temperaturData); //Just to verify that the program DOES write data..
-      if (bitCounter < 8) {
-        temperaturData = savePulse(interpretPulse(ticks2), temperaturData); //Saves data to temperaturData
-        bitCounter ++;
-      }
-
-      //When 8 bits saved to temperaturData
-      if (bitCounter == 8) {
-        if (temperaturData == 0x48 && clearForTemp == 0) { //0100 1000
-          //preamble complete, first 8 bits of temperaturData correct
-          //All clear to fill temperatureData with more bits
-          clearForTemp = 1;
-          return;
-        } else if (clearForTemp == 0){ //not ready to move on, first 8 bits of data are not correct, reset
-          temperaturData = 0;
-          bitCounter = 0;
-          preamble = 0;
-          clearForTemp = 0;
-          clearForCRC = 0;
-          return;
-        }
-      }
-
-    } else { //preamble not complete
-      //Checks preamble
-      if (interpretPulse(ticks2) == 1) {
-        int dataBit = 1;
-        preamble = savePulse(dataBit, preamble);
-      } else {
-        preamble = 0; //reset
-        return;
-      }
-
-    }
-
-    //preamble complete, first 8 bits of temperaturData correct, cotinues..
-    if (clearForTemp == 1 && bitCounter < 32) {
-      temperaturData = savePulse(interpretPulse(ticks2), temperaturData);
-      bitCounter ++;
-    } else if (clearForTemp == 1 && bitCounter == 32) {
-      clearForCRC = 1;
-    }
-
-    //temperaturData completed, begins to receive CRC
-    if (clearForCRC == 1 && bitCounter < 40) {
-      receivedCRC = savePulse(interpretPulse(ticks2), receivedCRC);
-      bitCounter ++;
-      // printf("bitCounter is %i\n", bitCounter);
-    }
-    if (bitCounter == 40) { //Reception complete, calculates and verifies CRC
-      calculatedCRC = HAL_CRC_Calculate(&hcrc, &temperaturData, 1);
-
-      //Received data is correct, prints temp to terminal.
-      if (receivedCRC == calculatedCRC) {
-        HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13); //data correct
-        double tempToPrint = (double)((temperaturData >> 8) & 0x3FF) / 10; //00 0000 0000 0000 11 1111 1111
-        printf("The current temperature is %0.1f Celsius, \n", tempToPrint);
-        int humToPrint = (temperaturData & 0x7F); //0....0111 1111
-        printf("the humidity is %d%%.\n", humToPrint);
-        //Creates a buffer for line 1 on the display
-        char buffer[10];
-        sprintf(buffer, "Temp:%0.1fC", tempToPrint);
-        selectRow(1);
-        printf("Printing temp to display..\n");
-        sendCharToDisplay(buffer);
-        selectRow(2);
-        printf("Pringting hum to display..\n");
-        char buffer2[10]; //buffer2 for line 2
-        // sprintf(buffer2, "Temp:%0.1fC", tempToPrint);
-        sprintf(buffer2, "Hum:   %d%%", humToPrint);
-        sendCharToDisplay(buffer2);
-
-        buffer[0]='\0';
-        buffer2[0]='\0';
-        temperaturData = 0;
-        bitCounter = 0;
-        preamble = 0;
-        clearForTemp = 0;
-        clearForCRC = 0;
-        calculatedCRC = 0;
-        receivedCRC = 0;
-        return;
-
-      }
-    }
-
-  }
-
-}//callback ends
-
 /* USER CODE END 0 */
 
 int main(void)
@@ -258,6 +144,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   initDisplay();
   selectRow(0);
+  RTC_CalendarSet();
   // sprintf
 
   //Start TIM2
@@ -273,6 +160,8 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+
+
 
     /* Put UART peripheral in reception process */
     if(HAL_UART_Receive_IT(&huart3, (uint8_t *)RXBuffer, BUFFERSIZE) != HAL_OK)
