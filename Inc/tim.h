@@ -6,7 +6,7 @@
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
+  * USER CODE END. Other portions of this file, whether
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
@@ -62,7 +62,8 @@ extern void _Error_Handler(char *, int);
 void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+int interpretPulse(uint16_t ticks);
+uint32_t savePulse(int dataBit, uint32_t myVariable);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

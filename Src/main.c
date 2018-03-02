@@ -106,35 +106,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
 }
 
 /**
-* @brief  Checks if it is a short pulse or a long one.
-* @param
-* @note   None
-* @retval None
-**/
-int interpretPulse(uint16_t ticks){
-  if (283 < ticks && ticks < 483) { //short puls, 1. 383µs +-50µs
-    //The LED indicates that the board is listening for pulses.
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
-    return 1;
-  } else if (1264 < ticks && ticks < 1464) { //long puls, 0. 1364µs +- 50µs
-    //The LED indicates that the board is listening for pulses.
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
-    return 0;
-  } //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
-  return 3000; //error code 3000.
-}
-
-/**
-* @brief  Saves pulse to a variable
-* @param  int dataBit, uint32_t myVariable
-* @note   ...
-* @retval None
-**/
-uint32_t savePulse(int dataBit, uint32_t myVariable){
-  return myVariable = (myVariable << 1) | dataBit;
-}
-
-/**
 * @brief  Rising/falling edge captured callback
 * @param  TIM_HandleTypeDef: htim2
 * @note   A simple way to report capture of an edge
