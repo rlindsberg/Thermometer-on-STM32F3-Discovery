@@ -160,16 +160,16 @@ void RTC_CalendarShow(uint8_t *showtime, uint8_t *showdate)
   savedSecond = stimestructureget.Seconds;
 }
 
-void RTC_CalendarSet(void)
+void RTC_CalendarSet(uint8_t someBuffer[])
 {
   RTC_DateTypeDef sdatestructureget;
   sdatestructureget.Month = 3;
   sdatestructureget.Date = 2;
   sdatestructureget.Year = 18;
   RTC_TimeTypeDef stimestructureget;
-  stimestructureget.Hours = 11;
-  stimestructureget.Minutes = 18;
-  stimestructureget.Seconds = 00;
+  stimestructureget.Hours = (someBuffer[0]-48)*10 + someBuffer[1]-48;
+  stimestructureget.Minutes = (someBuffer[2]-48)*10 + someBuffer[3]-48;
+  stimestructureget.Seconds = (someBuffer[4]-48)*10 + someBuffer[5]-48;
 
   /* Get the RTC current Time */
   HAL_RTC_SetTime(&hrtc, &stimestructureget, RTC_FORMAT_BIN);

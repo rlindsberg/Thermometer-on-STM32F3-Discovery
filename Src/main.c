@@ -97,14 +97,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 **/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
   /* Set transmission flag: transfer complete*/
-  selectRow(0);
-  printf("Printing time to display..\n");
-  for (size_t i = 0; i < 6; i++) {
-    sendDataToDisplay(RXBuffer[i]);
-    if (i == 1 || i == 3 ) {
-      sendDataToDisplay(58);
-    }
-  }
+
+  //Trying to set time instead of just showing it on display
+  RTC_CalendarSet(RXBuffer);
+  printf("%d\n", RXBuffer[0]);
+
   UartReady = SET;
 }
 
@@ -144,7 +141,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   initDisplay();
   selectRow(0);
-  RTC_CalendarSet();
   // sprintf
 
   //Start TIM2
