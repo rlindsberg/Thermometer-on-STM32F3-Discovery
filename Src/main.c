@@ -40,16 +40,18 @@
 #include "main.h"
 #include "stm32f3xx_hal.h"
 #include "crc.h"
+#include "rtc.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
+#include "display.h"
 //These declaration are put here to avoid being flushed when generating new code with CubeMX
 ITStatus UartReady = RESET;
 /* Size of Transmission buffer */
-#define BUFFERSIZE 5
+#define BUFFERSIZE 6
 uint8_t Buffer[] = "Hello World interrupt!";
 uint8_t RXBuffer[] = "";
 /* USER CODE END Includes */
@@ -70,107 +72,6 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
-
-
-/**
-* @brief  Init display
-* @param  uint8_t commandToBeSent[]
-* @note   ..
-* @retval None
-**/
-void sendCommandToSPI(uint8_t commandToBeSent[]){
-  for (int i = 0; i < 3; i++) {
-    HAL_SPI_Transmit(&hspi2, &commandToBeSent[i], 1, 50);
-  }
-}
-
-/**
-* @brief  Init display
-* @param  None
-* @note   ..
-* @retval None
-**/
-void initDisplay(void){
-  //Set CS to 0, Reset SPI2_NSS
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
-  HAL_Delay(10);
-  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-  // HAL_Delay(10);
-  //Initialization commands
-  uint8_t functionSet[3] = {0x1f, 0x0a, 0x03};
-  sendCommandToSPI(functionSet);
-  uint8_t extendedFunctionSet[3] = {0x1f, 0x09, 0x0};
-  sendCommandToSPI(extendedFunctionSet);
-  uint8_t entryModeSet[3] = {0x1f, 0x06, 0x0};
-  sendCommandToSPI(entryModeSet);
-  uint8_t biasSetting[3] = {0x1f,0x0e,0x01};
-  sendCommandToSPI(biasSetting);
-  uint8_t functionSet2[3] = {0x1f,0x09,0x03};
-  sendCommandToSPI(functionSet2);
-  uint8_t internalOSC[3] = {0x1f,0x0b,0x01};
-  sendCommandToSPI(internalOSC);
-  uint8_t followerControl[3] = {0x1f,0x0e,0x06};
-  sendCommandToSPI(followerControl);
-  uint8_t powerControl[3] = {0x1f,0x06,0x05};
-  sendCommandToSPI(powerControl);
-  uint8_t contrastSet[3] = {0x1f,0x0a,0x07};
-  sendCommandToSPI(contrastSet);
-  uint8_t functionSet3[3] = {0x1f,0x08,0x03};
-  sendCommandToSPI(functionSet3);
-  uint8_t displayOn[3] = {0x1f,0x0f,0x00};
-  sendCommandToSPI(displayOn);
-  uint8_t clearDisplay[3] = {0x1f,0x01,0x0};
-  sendCommandToSPI(clearDisplay);
-
-}
-
-/**
-* @brief  Put cursor onto the desired row
-* @param  uint8_t rowNr
-* @note   ..
-* @retval None
-**/
-void selectRow(uint8_t rowNr){
-  uint8_t rowAddress = 0x80 + rowNr * 0x20;
-  printf("%x\n", rowAddress);
-  uint8_t displayBuffer[3];
-  displayBuffer[0] = 0x1f;
-  displayBuffer[1] = rowAddress & 0x0f;
-  displayBuffer[2] = (rowAddress >> 4) & 0x0f;
-  HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 1000);
-}
-
-/**
-* @brief  Sends an ASCII code to display
-* @param  uint8_t asciiData
-* @note   ..
-* @retval None
-**/
-void sendDataToDisplay(uint8_t asciiData) {  // Send one character to display
-  uint8_t displayBuffer[3];
-  displayBuffer[0] = 0x5f;
-  displayBuffer[1] = asciiData & 0x0f;
-  displayBuffer[2] = (asciiData >> 4) & 0x0f;
-  HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
-  // sendCommandToSPI(displayBuffer); //doesn't work..
-}
-
-/**
-* @brief  Sends a string to display
-* @param  char charBuffer[]
-* @note   ..
-* @retval None
-**/
-void sendCharToDisplay(char charBuffer[]) {  // Send one character to display
-  uint8_t displayBuffer[3];
-  displayBuffer[0] = 0x5f;
-  for (size_t i = 0; i < 10; i++) {
-    displayBuffer[1] = charBuffer[i] & 0x0f;
-    displayBuffer[2] = charBuffer[i] >> 4 & 0x0f;
-    HAL_SPI_Transmit(&hspi2, displayBuffer, 3, 500);
-  }
-}
 
 
 /**
@@ -194,36 +95,15 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 **/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){
   /* Set transmission flag: transfer complete*/
+  selectRow(0);
+  printf("Printing time to display..\n");
+  for (size_t i = 0; i < 6; i++) {
+    sendDataToDisplay(RXBuffer[i]);
+    if (i == 1 || i == 3 ) {
+      sendDataToDisplay(58);
+    }
+  }
   UartReady = SET;
-}
-
-/**
-* @brief  Checks if it is a short pulse or a long one.
-* @param
-* @note   None
-* @retval None
-**/
-int interpretPulse(uint16_t ticks){
-  if (283 < ticks && ticks < 483) { //short puls, 1. 383µs +-50µs
-    //The LED indicates that the board is listening for pulses.
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
-    return 1;
-  } else if (1264 < ticks && ticks < 1464) { //long puls, 0. 1364µs +- 50µs
-    //The LED indicates that the board is listening for pulses.
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
-    return 0;
-  } //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
-  return 3000; //error code 3000.
-}
-
-/**
-* @brief  Saves pulse to a variable
-* @param  int dataBit, uint32_t myVariable
-* @note   ...
-* @retval None
-**/
-uint32_t savePulse(int dataBit, uint32_t myVariable){
-  return myVariable = (myVariable << 1) | dataBit;
 }
 
 /**
@@ -314,13 +194,18 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim2){
         //Creates a buffer for line 1 on the display
         char buffer[10];
         sprintf(buffer, "Temp:%0.1fC", tempToPrint);
+        selectRow(1);
+        printf("Printing temp to display..\n");
         sendCharToDisplay(buffer);
-        selectRow(3);
+        selectRow(2);
+        printf("Pringting hum to display..\n");
         char buffer2[10]; //buffer2 for line 2
         // sprintf(buffer2, "Temp:%0.1fC", tempToPrint);
         sprintf(buffer2, "Hum:   %d%%", humToPrint);
         sendCharToDisplay(buffer2);
 
+        buffer[0]='\0';
+        buffer2[0]='\0';
         temperaturData = 0;
         bitCounter = 0;
         preamble = 0;
@@ -368,6 +253,7 @@ int main(void)
   MX_TIM2_Init();
   MX_CRC_Init();
   MX_SPI2_Init();
+  MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
   initDisplay();
@@ -430,10 +316,11 @@ void SystemClock_Config(void)
 
     /**Initializes the CPU, AHB and APB busses clocks
     */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
@@ -456,8 +343,9 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_RTC;
   PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);

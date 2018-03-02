@@ -6,7 +6,7 @@
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
+  * USER CODE END. Other portions of this file, whether
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
@@ -123,9 +123,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE END TIM2_MspInit 0 */
     /* TIM2 clock enable */
     __HAL_RCC_TIM2_CLK_ENABLE();
-  
-    /**TIM2 GPIO Configuration    
-    PA15     ------> TIM2_CH1 
+
+    /**TIM2 GPIO Configuration
+    PA15     ------> TIM2_CH1
     */
     GPIO_InitStruct.Pin = GPIO_PIN_15;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -153,9 +153,9 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE END TIM2_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM2_CLK_DISABLE();
-  
-    /**TIM2 GPIO Configuration    
-    PA15     ------> TIM2_CH1 
+
+    /**TIM2 GPIO Configuration
+    PA15     ------> TIM2_CH1
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_15);
 
@@ -165,9 +165,37 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
   /* USER CODE END TIM2_MspDeInit 1 */
   }
-} 
+}
 
 /* USER CODE BEGIN 1 */
+/**
+* @brief  Checks if it is a short pulse or a long one.
+* @param
+* @note   None
+* @retval None
+**/
+int interpretPulse(uint16_t ticks){
+  if (283 < ticks && ticks < 483) { //short puls, 1. 383µs +-50µs
+    //The LED indicates that the board is listening for pulses.
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
+    return 1;
+  } else if (1264 < ticks && ticks < 1464) { //long puls, 0. 1364µs +- 50µs
+    //The LED indicates that the board is listening for pulses.
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);
+    return 0;
+  } //ticks2 is the same as ticks2 - ticks1 because we reset the timer upon positive edge
+  return 3000; //error code 3000.
+}
+
+/**
+* @brief  Saves pulse to a variable
+* @param  int dataBit, uint32_t myVariable
+* @note   ...
+* @retval None
+**/
+uint32_t savePulse(int dataBit, uint32_t myVariable){
+  return myVariable = (myVariable << 1) | dataBit;
+}
 
 /* USER CODE END 1 */
 
