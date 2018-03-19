@@ -152,7 +152,8 @@ void startBlink2(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);   // Blink PE11
+    vTaskDelay(1000);
   }
   /* USER CODE END startBlink2 */
 }
