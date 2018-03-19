@@ -159,10 +159,13 @@ void startBlink2(void const * argument)
 {
   /* USER CODE BEGIN startBlink2 */
   /* Infinite loop */
+  uint16_t varv,antalvarv=10000;
   for(;;)
   {
-    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);   // Blink PE11
-    vTaskDelay(1000);
+    for (varv=1; varv<= antalvarv; varv++){
+      HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_12);   // Blinka PE12
+      vTaskDelay(20);
+    }
   }
   /* USER CODE END startBlink2 */
 }
@@ -176,16 +179,16 @@ void StartTrigger(void const * argument)
   {
     GPIO_PinState PinState=SET;
     /* Infinite loop */
-      PinState= !PinState;
-      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14,PinState);
-      // Toggla PE14
-      vTaskDelay(20);
-    }
-    /* USER CODE END StartTrigger */
+    PinState= !PinState;
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14,PinState);
+    // Toggla PE14
+    vTaskDelay(20);
   }
+  /* USER CODE END StartTrigger */
+}
 
-  /* USER CODE BEGIN Application */
+/* USER CODE BEGIN Application */
 
-  /* USER CODE END Application */
+/* USER CODE END Application */
 
-  /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

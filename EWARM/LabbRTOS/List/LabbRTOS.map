@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.20.2.14835/W32 for ARM                19/Mar/2018  09:21:27
+# IAR ELF Linker V8.20.2.14835/W32 for ARM                19/Mar/2018  09:25:07
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
@@ -8,7 +8,7 @@
 #    Map file     =  
 #        C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\List\LabbRTOS.map
 #    Command line =  
-#        -f C:\Users\Ag\AppData\Local\Temp\EWAAF2.tmp
+#        -f C:\Users\Ag\AppData\Local\Temp\EW56B.tmp
 #        (C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\Obj\cmsis_os.o
 #        C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\Obj\croutine.o
 #        C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\Obj\event_groups.o
@@ -87,7 +87,7 @@ initialize by copy { rw };
   .intvec            ro code  0x08000000   0x188  startup_stm32f303xc.o [1]
                             - 0x08000188   0x188
 
-"P1":                                     0x1c08
+"P1":                                     0x1c0c
   .text              ro code  0x08000188   0x540  tasks.o [1]
   .text              ro code  0x080006c8   0x1b4  heap_4.o [1]
   .text              ro code  0x0800087c    0x8e  list.o [1]
@@ -108,30 +108,29 @@ initialize by copy { rw };
   .text              ro code  0x080014d4     0x2  stm32f3xx_hal_tim.o [1]
   .text              ro code  0x080014d8    0x24  stm32f3xx_hal.o [1]
   .text              ro code  0x080014fc   0x114  gpio.o [1]
-  .text              ro code  0x08001610   0x110  freertos.o [1]
-  .text              ro code  0x08001720    0x66  cmsis_os.o [1]
-  .text              ro code  0x08001788    0x10  stm32f3xx_hal.o [1]
-  .text              ro code  0x08001798    0x78  stm32f3xx_hal_msp.o [1]
-  .text              ro code  0x08001810   0x1d4  stm32f3xx_hal_gpio.o [1]
-  .text              ro code  0x080019e4    0x86  ABImemcpy.o [5]
-  .text              ro code  0x08001a6c    0x7c  system_stm32f3xx.o [1]
-  .text              ro code  0x08001ae8    0x40  zero_init3.o [5]
-  .text              ro code  0x08001b28    0x2c  copy_init3.o [5]
-  .text              ro code  0x08001b54    0x28  data_init.o [5]
-  .rodata            const    0x08001b7c    0x24  freertos.o [1]
-  .text              ro code  0x08001ba0    0x22  fpinit_M.o [4]
-  .iar.init_table    const    0x08001bc4    0x24  - Linker created -
-  .text              ro code  0x08001be8    0x1e  cmain.o [5]
-  .text              ro code  0x08001c06     0x4  low_level_init.o [3]
-  .text              ro code  0x08001c0a     0x4  exit.o [3]
-  .text              ro code  0x08001c10     0xa  cexit.o [5]
-  .text              ro code  0x08001c1c    0x14  exit.o [6]
-  .text              ro code  0x08001c30    0x10  startup_stm32f303xc.o [1]
-  .text              ro code  0x08001c40    0x10  stm32f3xx_it.o [1]
-  Initializer bytes  const    0x08001c50    0x10  <for P2-1>
-  .text              ro code  0x08001c60     0xc  cstartup_M.o [5]
-  .rodata            const    0x08001c6c     0x8  system_stm32f3xx.o [1]
-  .text              ro code  0x08001c74     0x4  startup_stm32f303xc.o [1]
+  .text              ro code  0x08001610   0x114  freertos.o [1]
+  .text              ro code  0x08001724    0x66  cmsis_os.o [1]
+  .text              ro code  0x0800178c    0x10  stm32f3xx_hal.o [1]
+  .text              ro code  0x0800179c    0x78  stm32f3xx_hal_msp.o [1]
+  .text              ro code  0x08001814   0x1d4  stm32f3xx_hal_gpio.o [1]
+  .text              ro code  0x080019e8    0x86  ABImemcpy.o [5]
+  .text              ro code  0x08001a70    0x7c  system_stm32f3xx.o [1]
+  .text              ro code  0x08001aec    0x40  zero_init3.o [5]
+  .text              ro code  0x08001b2c    0x2c  copy_init3.o [5]
+  .text              ro code  0x08001b58    0x28  data_init.o [5]
+  .rodata            const    0x08001b80    0x24  freertos.o [1]
+  .text              ro code  0x08001ba4    0x22  fpinit_M.o [4]
+  .iar.init_table    const    0x08001bc8    0x24  - Linker created -
+  .text              ro code  0x08001bec    0x1e  cmain.o [5]
+  .text              ro code  0x08001c0a     0x4  low_level_init.o [3]
+  .text              ro code  0x08001c0e     0x4  exit.o [3]
+  .text              ro code  0x08001c14     0xa  cexit.o [5]
+  .text              ro code  0x08001c20    0x14  exit.o [6]
+  .text              ro code  0x08001c34    0x10  startup_stm32f303xc.o [1]
+  .text              ro code  0x08001c44    0x10  stm32f3xx_it.o [1]
+  Initializer bytes  const    0x08001c54    0x10  <for P2-1>
+  .text              ro code  0x08001c64     0xc  cstartup_M.o [5]
+  .rodata            const    0x08001c70     0x8  system_stm32f3xx.o [1]
   .text              ro code  0x08001c78     0x4  startup_stm32f303xc.o [1]
   .text              ro code  0x08001c7c     0x4  startup_stm32f303xc.o [1]
   .text              ro code  0x08001c80     0x4  startup_stm32f303xc.o [1]
@@ -202,9 +201,10 @@ initialize by copy { rw };
   .text              ro code  0x08001d84     0x4  startup_stm32f303xc.o [1]
   .text              ro code  0x08001d88     0x4  startup_stm32f303xc.o [1]
   .text              ro code  0x08001d8c     0x4  startup_stm32f303xc.o [1]
-  .rodata            const    0x08001d90     0x0  zero_init3.o [5]
-  .rodata            const    0x08001d90     0x0  copy_init3.o [5]
-                            - 0x08001d90  0x1c08
+  .text              ro code  0x08001d90     0x4  startup_stm32f303xc.o [1]
+  .rodata            const    0x08001d94     0x0  zero_init3.o [5]
+  .rodata            const    0x08001d94     0x0  copy_init3.o [5]
+                            - 0x08001d94  0x1c0c
 
 "P2", part 1 of 3:                          0x10
   P2-1                        0x20000000    0x10  <Init block>
@@ -239,7 +239,7 @@ Zero (__iar_zero_init3)
 
 Copy (__iar_copy_init3)
     1 source range, total size 0x10:
-          0x08001c50    0x10
+          0x08001c54    0x10
     1 destination range, total size 0x10:
           0x20000000    0x10
 
@@ -253,7 +253,7 @@ Copy (__iar_copy_init3)
     ------                        -------  -------  -------
 C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\Obj: [1]
     cmsis_os.o                        102
-    freertos.o                        272       36       16
+    freertos.o                        276       36       16
     gpio.o                            276
     heap_4.o                          436            10 264
     list.o                            142
@@ -273,7 +273,7 @@ C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM\LabbRTOS\Obj
     system_stm32f3xx.o                124       12        4
     tasks.o                         1 344               300
     -------------------------------------------------------
-    Total:                          7 060       60   10 664
+    Total:                          7 064       60   10 664
 
 command line: [2]
     -------------------------------------------------------
@@ -309,7 +309,7 @@ shb_l.a: [6]
     Gaps                               14        2
     Linker created                              36    1 024
 -----------------------------------------------------------
-    Grand Total:                    7 470       98   11 688
+    Grand Total:                    7 474       98   11 688
 
 
 *******************************************************************************
@@ -318,23 +318,23 @@ shb_l.a: [6]
 
 Entry                      Address    Size  Type      Object
 -----                      -------    ----  ----      ------
-.iar.init_table$$Base   0x08001bc4           --   Gb  - Linker created -
-.iar.init_table$$Limit  0x08001be8           --   Gb  - Linker created -
-?main                   0x08001be9          Code  Gb  cmain.o [5]
-AHBPrescTable           0x08001ad8    0x10  Data  Gb  system_stm32f3xx.o [1]
-APBPrescTable           0x08001c6c     0x8  Data  Gb  system_stm32f3xx.o [1]
+.iar.init_table$$Base   0x08001bc8           --   Gb  - Linker created -
+.iar.init_table$$Limit  0x08001bec           --   Gb  - Linker created -
+?main                   0x08001bed          Code  Gb  cmain.o [5]
+AHBPrescTable           0x08001adc    0x10  Data  Gb  system_stm32f3xx.o [1]
+APBPrescTable           0x08001c70     0x8  Data  Gb  system_stm32f3xx.o [1]
 Blink1Handle            0x20002998     0x4  Data  Gb  freertos.o [1]
 Blink2Handle            0x2000299c     0x4  Data  Gb  freertos.o [1]
 CSTACK$$Base            0x200029a8           --   Gb  - Linker created -
 CSTACK$$Limit           0x20002da8           --   Gb  - Linker created -
-HAL_GPIO_Init           0x08001811   0x1a0  Code  Gb  stm32f3xx_hal_gpio.o [1]
-HAL_GPIO_TogglePin      0x080019bf     0x8  Code  Gb  stm32f3xx_hal_gpio.o [1]
-HAL_GPIO_WritePin       0x080019b1     0xe  Code  Gb  stm32f3xx_hal_gpio.o [1]
+HAL_GPIO_Init           0x08001815   0x1a0  Code  Gb  stm32f3xx_hal_gpio.o [1]
+HAL_GPIO_TogglePin      0x080019c3     0x8  Code  Gb  stm32f3xx_hal_gpio.o [1]
+HAL_GPIO_WritePin       0x080019b5     0xe  Code  Gb  stm32f3xx_hal_gpio.o [1]
 HAL_GetTick             0x08001059     0xc  Code  Wk  stm32f3xx_hal.o [1]
-HAL_IncTick             0x08001789    0x10  Code  Wk  stm32f3xx_hal.o [1]
+HAL_IncTick             0x0800178d    0x10  Code  Wk  stm32f3xx_hal.o [1]
 HAL_Init                0x080014d9    0x20  Code  Gb  stm32f3xx_hal.o [1]
 HAL_InitTick            0x08001065    0x66  Code  Gb  stm32f3xx_hal_timebase_TIM.o [1]
-HAL_MspInit             0x08001799    0x78  Code  Gb  stm32f3xx_hal_msp.o [1]
+HAL_MspInit             0x0800179d    0x78  Code  Gb  stm32f3xx_hal_msp.o [1]
 HAL_NVIC_EnableIRQ      0x0800114f     0xa  Code  Gb  stm32f3xx_hal_cortex.o [1]
 HAL_NVIC_SetPriority    0x08001115    0x3a  Code  Gb  stm32f3xx_hal_cortex.o [1]
 HAL_NVIC_SetPriorityGrouping
@@ -364,46 +364,46 @@ MX_FREERTOS_Init        0x08001611    0x62  Code  Gb  freertos.o [1]
 MX_GPIO_Init            0x080014fd    0xf8  Code  Gb  gpio.o [1]
 NVIC_SetPriority        0x080010dd    0x1e  Code  Lc  stm32f3xx_hal_cortex.o [1]
 PendSV_Handler          0x08000aad          Code  Gb  portasm.o [1]
-Region$$Table$$Base     0x08001bc4           --   Gb  - Linker created -
-Region$$Table$$Limit    0x08001be8           --   Gb  - Linker created -
+Region$$Table$$Base     0x08001bc8           --   Gb  - Linker created -
+Region$$Table$$Limit    0x08001bec           --   Gb  - Linker created -
 SVC_Handler             0x08000b05          Code  Gb  portasm.o [1]
 StartDefaultTask        0x08001673     0xa  Code  Gb  freertos.o [1]
-StartTrigger            0x080016b1    0x18  Code  Gb  freertos.o [1]
-SysTick_Handler         0x08001c41     0x4  Code  Gb  stm32f3xx_it.o [1]
+StartTrigger            0x080016b5    0x18  Code  Gb  freertos.o [1]
+SysTick_Handler         0x08001c45     0x4  Code  Gb  stm32f3xx_it.o [1]
 SystemClock_Config      0x08001449    0x72  Code  Gb  main.o [1]
 SystemCoreClock         0x2000000c     0x4  Data  Gb  system_stm32f3xx.o [1]
-SystemInit              0x08001a6d    0x52  Code  Gb  system_stm32f3xx.o [1]
+SystemInit              0x08001a71    0x52  Code  Gb  system_stm32f3xx.o [1]
 TIM1_UP_TIM16_IRQHandler
-                        0x08001c45     0x6  Code  Gb  stm32f3xx_it.o [1]
+                        0x08001c49     0x6  Code  Gb  stm32f3xx_it.o [1]
 TIM_Base_SetConfig      0x08001373    0x96  Code  Gb  stm32f3xx_hal_tim.o [1]
 TriggerHandle           0x200029a0     0x4  Data  Gb  freertos.o [1]
-__aeabi_memcpy4         0x080019e5          Code  Gb  ABImemcpy.o [5]
-__aeabi_memcpy8         0x080019e5          Code  Gb  ABImemcpy.o [5]
-__cmain                 0x08001be9          Code  Gb  cmain.o [5]
-__exit                  0x08001c1d    0x14  Code  Gb  exit.o [6]
-__iar_copy_init3        0x08001b29    0x2c  Code  Gb  copy_init3.o [5]
-__iar_data_init3        0x08001b55    0x28  Code  Gb  data_init.o [5]
-__iar_init_vfp          0x08001ba1          Code  Gb  fpinit_M.o [4]
-__iar_program_start     0x08001c61          Code  Gb  cstartup_M.o [5]
+__aeabi_memcpy4         0x080019e9          Code  Gb  ABImemcpy.o [5]
+__aeabi_memcpy8         0x080019e9          Code  Gb  ABImemcpy.o [5]
+__cmain                 0x08001bed          Code  Gb  cmain.o [5]
+__exit                  0x08001c21    0x14  Code  Gb  exit.o [6]
+__iar_copy_init3        0x08001b2d    0x2c  Code  Gb  copy_init3.o [5]
+__iar_data_init3        0x08001b59    0x28  Code  Gb  data_init.o [5]
+__iar_init_vfp          0x08001ba5          Code  Gb  fpinit_M.o [4]
+__iar_program_start     0x08001c65          Code  Gb  cstartup_M.o [5]
 __iar_systems$$module {Abs}
                         0x00000001          Data  Gb  command line/config [2]
-__iar_zero_init3        0x08001ae9    0x40  Code  Gb  zero_init3.o [5]
-__low_level_init        0x08001c07     0x4  Code  Gb  low_level_init.o [3]
+__iar_zero_init3        0x08001aed    0x40  Code  Gb  zero_init3.o [5]
+__low_level_init        0x08001c0b     0x4  Code  Gb  low_level_init.o [3]
 __vector_table          0x08000000          Data  Gb  startup_stm32f303xc.o [1]
-_call_main              0x08001bf5          Code  Gb  cmain.o [5]
-_exit                   0x08001c11          Code  Gb  cexit.o [5]
-_main                   0x08001c03          Code  Gb  cmain.o [5]
+_call_main              0x08001bf9          Code  Gb  cmain.o [5]
+_exit                   0x08001c15          Code  Gb  cexit.o [5]
+_main                   0x08001c07          Code  Gb  cmain.o [5]
 aPLLMULFactorTable      0x08001038    0x10  Data  Gb  stm32f3xx_hal_rcc.o [1]
 aPredivFactorTable      0x08001048    0x10  Data  Gb  stm32f3xx_hal_rcc.o [1]
 defaultTaskHandle       0x20002994     0x4  Data  Gb  freertos.o [1]
-exit                    0x08001c0b     0x4  Code  Gb  exit.o [3]
+exit                    0x08001c0f     0x4  Code  Gb  exit.o [3]
 htim1                   0x20002954    0x40  Data  Gb  stm32f3xx_hal_timebase_TIM.o [1]
 main                    0x08001431    0x18  Code  Gb  main.o [1]
-makeFreeRtosPriority    0x08001721     0xc  Code  Lc  cmsis_os.o [1]
-osDelay                 0x08001765     0xe  Code  Gb  cmsis_os.o [1]
-osKernelStart           0x0800172d     0xa  Code  Gb  cmsis_os.o [1]
-osSystickHandler        0x08001773    0x14  Code  Gb  cmsis_os.o [1]
-osThreadCreate          0x08001737    0x2e  Code  Gb  cmsis_os.o [1]
+makeFreeRtosPriority    0x08001725     0xc  Code  Lc  cmsis_os.o [1]
+osDelay                 0x08001769     0xe  Code  Gb  cmsis_os.o [1]
+osKernelStart           0x08001731     0xa  Code  Gb  cmsis_os.o [1]
+osSystickHandler        0x08001777    0x14  Code  Gb  cmsis_os.o [1]
+osThreadCreate          0x0800173b    0x2e  Code  Gb  cmsis_os.o [1]
 prvAddCurrentTaskToDelayedList
                         0x0800064d    0x64  Code  Lc  tasks.o [1]
 prvAddNewTaskToReadyList
@@ -425,7 +425,7 @@ pxOverflowDelayedTaskList
 pxPortInitialiseStack   0x0800090d    0x26  Code  Gb  port.o [1]
 pxReadyTasksLists       0x200028c8    0x8c  Data  Lc  tasks.o [1]
 startBlink1             0x0800167d    0x1c  Code  Gb  freertos.o [1]
-startBlink2             0x08001699    0x18  Code  Gb  freertos.o [1]
+startBlink2             0x08001699    0x1c  Code  Gb  freertos.o [1]
 ucHeap                  0x20000028  0x2800  Data  Lc  heap_4.o [1]
 ucMaxSysCallPriority    0x20000000     0x1  Data  Lc  port.o [1]
 ulMaxPRIGROUPValue      0x20000008     0x4  Data  Lc  port.o [1]
@@ -484,7 +484,7 @@ xYieldPending           0x20002888     0x4  Data  Lc  tasks.o [1]
 [5] = rt7M_tl.a
 [6] = shb_l.a
 
-   7 470 bytes of readonly  code memory
+   7 474 bytes of readonly  code memory
       98 bytes of readonly  data memory
   11 688 bytes of readwrite data memory
 

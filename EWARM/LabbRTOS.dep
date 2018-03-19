@@ -235,10 +235,6 @@
             <name>$PROJ_DIR$\..\Src\freertos.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 89</file>
-                </tool>
-                <tool>
                     <name>BICOMP</name>
                     <file> 27</file>
                 </tool>
