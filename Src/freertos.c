@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * File Name          : main.hpp
-  * Description        : This file contains the common defines of the application
+  * File Name          : freertos.c
+  * Description        : Code for freertos applications
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -45,105 +45,118 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
 
 /* Includes ------------------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-extern int counter2;
+#include "FreeRTOS.h"
+#include "task.h"
+#include "cmsis_os.h"
+
+/* USER CODE BEGIN Includes */     
+
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
+/* Variables -----------------------------------------------------------------*/
+osThreadId defaultTaskHandle;
+osThreadId Blink1Handle;
+osThreadId Blink2Handle;
 
-#define DRDY_Pin GPIO_PIN_2
-#define DRDY_GPIO_Port GPIOE
-#define CS_I2C_SPI_Pin GPIO_PIN_3
-#define CS_I2C_SPI_GPIO_Port GPIOE
-#define MEMS_INT3_Pin GPIO_PIN_4
-#define MEMS_INT3_GPIO_Port GPIOE
-#define MEMS_INT4_Pin GPIO_PIN_5
-#define MEMS_INT4_GPIO_Port GPIOE
-#define OSC32_IN_Pin GPIO_PIN_14
-#define OSC32_IN_GPIO_Port GPIOC
-#define OSC32_OUT_Pin GPIO_PIN_15
-#define OSC32_OUT_GPIO_Port GPIOC
-#define OSC_IN_Pin GPIO_PIN_0
-#define OSC_IN_GPIO_Port GPIOF
-#define OSC_OUT_Pin GPIO_PIN_1
-#define OSC_OUT_GPIO_Port GPIOF
-#define B1_Pin GPIO_PIN_0
-#define B1_GPIO_Port GPIOA
-#define SPI1_SCK_Pin GPIO_PIN_5
-#define SPI1_SCK_GPIO_Port GPIOA
-#define SPI1_MISO_Pin GPIO_PIN_6
-#define SPI1_MISO_GPIO_Port GPIOA
-#define SPI1_MISOA7_Pin GPIO_PIN_7
-#define SPI1_MISOA7_GPIO_Port GPIOA
-#define LD4_Pin GPIO_PIN_8
-#define LD4_GPIO_Port GPIOE
-#define LD3_Pin GPIO_PIN_9
-#define LD3_GPIO_Port GPIOE
-#define LD5_Pin GPIO_PIN_10
-#define LD5_GPIO_Port GPIOE
-#define LD7_Pin GPIO_PIN_11
-#define LD7_GPIO_Port GPIOE
-#define LD9_Pin GPIO_PIN_12
-#define LD9_GPIO_Port GPIOE
-#define LD10_Pin GPIO_PIN_13
-#define LD10_GPIO_Port GPIOE
-#define LD8_Pin GPIO_PIN_14
-#define LD8_GPIO_Port GPIOE
-#define LD6_Pin GPIO_PIN_15
-#define LD6_GPIO_Port GPIOE
-#define DM_Pin GPIO_PIN_11
-#define DM_GPIO_Port GPIOA
-#define DP_Pin GPIO_PIN_12
-#define DP_GPIO_Port GPIOA
-#define SWDIO_Pin GPIO_PIN_13
-#define SWDIO_GPIO_Port GPIOA
-#define SWCLK_Pin GPIO_PIN_14
-#define SWCLK_GPIO_Port GPIOA
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
-#define I2C1_SCL_Pin GPIO_PIN_6
-#define I2C1_SCL_GPIO_Port GPIOB
-#define I2C1_SDA_Pin GPIO_PIN_7
-#define I2C1_SDA_GPIO_Port GPIOB
-#define MEMS_INT1_Pin GPIO_PIN_0
-#define MEMS_INT1_GPIO_Port GPIOE
-#define MEMS_INT2_Pin GPIO_PIN_1
-#define MEMS_INT2_GPIO_Port GPIOE
+/* USER CODE BEGIN Variables */
 
-/* ########################## Assert Selection ############################## */
-/**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
-  *        HAL drivers code
-  */
-/* #define USE_FULL_ASSERT    1U */
+/* USER CODE END Variables */
 
-/* USER CODE BEGIN Private defines */
+/* Function prototypes -------------------------------------------------------*/
+void StartDefaultTask(void const * argument);
+void startBlink1(void const * argument);
+void startBlink2(void const * argument);
 
-/* USER CODE END Private defines */
+void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-void _Error_Handler(char *, int);
+/* USER CODE BEGIN FunctionPrototypes */
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-#ifdef __cplusplus
+/* USER CODE END FunctionPrototypes */
+
+/* Hook prototypes */
+
+/* Init FreeRTOS */
+
+void MX_FREERTOS_Init(void) {
+  /* USER CODE BEGIN Init */
+       
+  /* USER CODE END Init */
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* Create the thread(s) */
+  /* definition and creation of defaultTask */
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of Blink1 */
+  osThreadDef(Blink1, startBlink1, osPriorityNormal, 0, 128);
+  Blink1Handle = osThreadCreate(osThread(Blink1), NULL);
+
+  /* definition and creation of Blink2 */
+  osThreadDef(Blink2, startBlink2, osPriorityNormal, 0, 128);
+  Blink2Handle = osThreadCreate(osThread(Blink2), NULL);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
 }
-#endif
 
-/**
-  * @}
-  */ 
+/* StartDefaultTask function */
+void StartDefaultTask(void const * argument)
+{
 
-/**
-  * @}
-*/ 
+  /* USER CODE BEGIN StartDefaultTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartDefaultTask */
+}
 
-#endif /* __MAIN_H */
+/* startBlink1 function */
+void startBlink1(void const * argument)
+{
+  /* USER CODE BEGIN startBlink1 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END startBlink1 */
+}
+
+/* startBlink2 function */
+void startBlink2(void const * argument)
+{
+  /* USER CODE BEGIN startBlink2 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END startBlink2 */
+}
+
+/* USER CODE BEGIN Application */
+     
+/* USER CODE END Application */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

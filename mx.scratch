@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\\lab2-cube32mx</ProjectName>
-<CMSIS>..\Drivers\CMSIS</CMSIS>
+<ProjectName>C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\\LabbRTOS</ProjectName>
+<CMSIS>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\CMSIS</HAL_Driver>
 
 <Toolchain>EWARM</Toolchain>
@@ -23,7 +23,7 @@
 
 <configs>
   <config>
-    <name>lab2-cube32mx</name>				
+    <name>LabbRTOS</name>				
     <device>STM32F303VCTx</device>		 
     <heapSize>0x200</heapSize>
     <stackSize>0x400</stackSize>
@@ -39,11 +39,9 @@
         <define></define>
     </Adefines>   
 
-    <UsedFreeRTOS></UsedFreeRTOS>
+    <UsedFreeRTOS>true</UsedFreeRTOS>
     <Aincludes>
-
-
-	    	<include></include>
+		   		<include>$PROJ_DIR$\..\Inc</include>
     </Aincludes>
     <Cdefines>
     </Cdefines>
@@ -61,10 +59,13 @@
     
 	<Cincludes>
 	   <include>..\Inc</include>
-	   <include>..\Drivers\STM32F3xx_HAL_Driver\Inc</include>
-	   <include>..\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy</include>
-	   <include>..\Drivers\CMSIS\Device\ST\STM32F3xx\Include</include>
-	   <include>..\Drivers\CMSIS\Include</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\STM32F3xx_HAL_Driver\Inc</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\CMSIS\Device\ST\STM32F3xx\Include</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares\Third_Party\FreeRTOS\Source\include</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS</include>
+	   <include>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\CMSIS\Include</include>
 
     </Cincludes>
       </config>
@@ -72,75 +73,87 @@
 
     <underRoot>false</underRoot>
 
+      <group>
+        <name>Middlewares</name>  
+                    <group>
+                            <name>FreeRTOS</name>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/portable/IAR/ARM_CM4F/port.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/portable/IAR/ARM_CM4F/portasm.s</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/croutine.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/event_groups.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/list.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/queue.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/tasks.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/timers.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c</name>
+                                            </file>
+                </group>
+      </group> 
 	   <group>
 	    <name>Drivers</name> 
 		   <group>
 		 		<name>STM32F3xx_HAL_Driver</name>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_crc.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_crc_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rtc.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rtc_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_spi.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_spi_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.c</name>
 						</file>
 						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.c</name>
-						</file>
-						<file>
-							<name>../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c</name>
+							<name>C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c</name>
 						</file>
 		    </group>
 		    <group>
@@ -163,23 +176,7 @@
                                 </file>
 
                                 <file>
-                                 <name>..\Src\crc.c</name>
-                                </file>
-
-                                <file>
-                                 <name>..\Src\rtc.c</name>
-                                </file>
-
-                                <file>
-                                 <name>..\Src\spi.c</name>
-                                </file>
-
-                                <file>
-                                 <name>..\Src\tim.c</name>
-                                </file>
-
-                                <file>
-                                 <name>..\Src\usart.c</name>
+                                 <name>..\Src\freertos.c</name>
                                 </file>
 
                                 <file>
@@ -188,6 +185,10 @@
 
                                 <file>
                                  <name>..\Src\stm32f3xx_hal_msp.c</name>
+                                </file>
+
+                                <file>
+                                 <name>..\Src\stm32f3xx_hal_timebase_TIM.c</name>
                                 </file>
 
 
