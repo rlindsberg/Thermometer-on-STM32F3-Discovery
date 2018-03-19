@@ -2,7 +2,7 @@
 -std=c11
 -ferror-limit=0
 -I
-D:\KTH\IS1300\Labb3RTOS\LabbRTOS\EWARM/../Inc
+C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\EWARM/../Inc
 -I
 C:/Users/Ag/STM32Cube/Repository/STM32Cube_FW_F3_V1.9.0/Drivers/STM32F3xx_HAL_Driver/Inc
 -I
@@ -24,7 +24,7 @@ D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-D:\KTH\IS1300\Labb3RTOS\LabbRTOS\Inc
+C:\Users\Ag\Documents\GitHub\Thermometer-on-STM32F3-Discovery\Inc
 -I
 C:\Users\Ag\STM32Cube\Repository\STM32Cube_FW_F3_V1.9.0\Drivers\STM32F3xx_HAL_Driver\Inc
 -I
