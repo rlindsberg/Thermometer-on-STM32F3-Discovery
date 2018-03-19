@@ -170,7 +170,14 @@ void StartTrigger(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    GPIO_PinState PinState=SET;
+    /* Infinite loop */
+    for(;;)
+    {
+      PinState= !PinState;
+      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14,PinState);
+  // Toggla PE14
+      vTaskDelay(20);
   }
   /* USER CODE END StartTrigger */
 }
