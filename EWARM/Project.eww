@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspace>
   <project>
-    <path>$WS_DIR$\lab2-cube32mx.ewp</path>
+    <path>$WS_DIR$\LabbRTOS.ewp</path>
   </project>
   <batchBuild />
 </workspace>
